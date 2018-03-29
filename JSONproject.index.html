@@ -1,0 +1,92 @@
+<!doctype>
+<html>
+
+<style>
+	.card{
+		width:300px;
+
+		padding:10px;
+		margin:10px;
+		display:inline-block;
+		border-radius:10px;
+		box-shadow:black 5px 5px 5px;
+	}
+	h1{
+		font-family:"Arial";
+		text-shadow:gray 2px 2px 2px;
+	}
+	p,a{
+		font-size:10pt;
+		font-family:"Arial";
+	}
+	a{
+		background-color:blue;
+		text-decoration:none;
+		color:white;
+		font-weight:bold;
+		padding:5px;
+		border-radius:10px;
+		box-shadow:black 5px 5px 5px;
+	}
+</style>
+
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+
+<script type = "text/template" id = "template">
+	<div class = 'card' >
+		<h1> {{job_status_descrp}} </h1>
+		<h2> {{business_title}} </h2>
+		<h2> Agency: {{agency}} </h2>
+		<h3> Job Category: {{job_category}} </h3>
+		<p> {{job_description}} </p>
+		<marquee> Avalible Postions: {{__of_positions}} </marquee>
+	</div>
+</script>
+
+
+
+<script>
+	var data = "";
+	
+	function loadJSON(){
+		$.getJSON("https://data.cityofnewyork.us/resource/swhp-yxa4.json", function(results){
+			data = results;
+		})
+	}
+	
+		
+		
+	function search(){
+	
+	var build = "";
+	
+	var job_category = document.getElementById("job_category");
+	var output = document.getElementById("output");
+	var cardTemplate = document.getElementById("template").innerHTML;
+	
+	for (var index = 0; index <data.length; index++){
+		if (data[index].job_category.toUpperCase().indexOf(job_category.value.toUpperCase()) != -1
+		){
+			build += Mustache.render(cardTemplate, data[index]);
+		}
+	output.innerHTML = build;
+	}
+	
+	
+	}
+	
+</script>
+
+
+
+<body onload = 'loadJSON()'>
+	<input type = 'text' id = 'job_category' placeholder = 'Enter Job Category' >
+	<p> Category List: Health, Technology, Community, Engineering... </p>
+	<button onclick = "search()"> Search </button>
+	<div id="output"></div>
+	
+
+</body>
+
+</html>
